@@ -1,166 +1,64 @@
-/* Общие стили */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f9f9f9;
   margin: 0;
-  padding: 0;
-  text-align: center;
-  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fafafa;
+  color: #1a1a1a;
 }
 
 .container {
-  max-width: 600px;
-  margin: auto;
+  text-align: center;
   padding: 30px 20px;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-/* Логотип и заголовок */
 .logo {
-  width: 100px;
-  height: 100px;
-  border-radius: 12px;
-  margin-bottom: 20px;
+  width: 90px;
+  margin-bottom: 10px;
 }
 
 h1 {
-  font-size: 36px;
-  margin-bottom: 8px;
-  color: #222;
+  font-size: 32px;
+  margin-bottom: 5px;
 }
 
 .description {
   font-size: 16px;
   color: #666;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
-/* Кнопки */
 .buttons {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
 }
 
 button {
-  padding: 14px 20px;
-  font-size: 16px;
+  padding: 10px 20px;
   border-radius: 12px;
   border: none;
+  font-size: 15px;
   cursor: pointer;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: 0.2s ease;
+  background-color: #fff;
 }
 
 button:hover {
   background-color: #f0f0f0;
 }
 
-/* Разделы (уровень сложности) */
-.level-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 25px;
-}
-
-.level-buttons button {
-  font-weight: 600;
-  padding: 10px 16px;
-  background-color: #e9f5ff;
-  border: 1px solid #b3dcfb;
-}
-
-.level-buttons button.selected {
-  background-color: #2196f3;
-  color: white;
-  border-color: #2196f3;
-}
-
-/* Карточки */
-.card {
-  padding: 16px;
-  background-color: #fff;
-  margin: 10px 0;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.card:hover {
-  background-color: #f5faff;
-}
-
-.card.correct {
-  background-color: #c8f7c5;
-}
-
-.card.wrong {
-  background-color: #ffcdd2;
-}
-
-/* Пары слов */
-.pair-column {
-  display: flex;
-  justify-content: space-around;
-  margin: 20px 0;
-}
-
-.pair-column div {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.pair-column button {
-  width: 100%;
-}
-
-/* Предложения */
-.sentence-box {
-  margin-top: 25px;
-  margin-bottom: 15px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.word-options {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}
-
-/* Навигация */
-.nav-buttons {
-  margin-top: 30px;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.nav-buttons button {
-  background-color: #e0f7fa;
-  border: 1px solid #a0d2d8;
-}
-
-.footer {
-  margin-top: 40px;
+button:disabled {
+  background-color: #eee;
   color: #999;
-  font-size: 13px;
+  cursor: not-allowed;
 }
 
-/* Статистика */
-.stats-box {
-  margin-top: 20px;
-  background-color: #fff8e1;
-  border: 1px solid #ffe082;
-  padding: 16px;
-  border-radius: 10px;
+footer {
+  margin-top: 40px;
   font-size: 14px;
-  color: #555;
+  color: #888;
 }
-
