@@ -77,6 +77,9 @@ function App() {
     </div>
   );
 }
+<p>Уровень: {level}</p>
+<p>Очки: {score}</p>
+<p>Статистика: {stats.correct} правильных, {stats.incorrect} ошибок</p>
 
 export default App;
 
