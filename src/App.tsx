@@ -1,94 +1,108 @@
-import './App.css';
-import avatar from './assets/Молодой человек в традиционном головном уборе.png';
-import { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import avatar from "./assets/Молодой человек в головном уборе.png";
+
+const wordPairs = {
+  easy: [
+    { kz: "Сәлем", ru: "Привет" },
+    { kz: "Қалайсың", ru: "Как дела" },
+    { kz: "Иә", ru: "Да" },
+    { kz: "Жоқ", ru: "Нет" },
+  ],
+  medium: [
+    { kz: "Кел", ru: "Иди" },
+    { kz: "Жазу", ru: "Писать" },
+    { kz: "Оқу", ru: "Читать" },
+    { kz: "Беру", ru: "Брать" },
+  ],
+  hard: [
+    { kz: "Ұйымдастыру", ru: "Организовать" },
+    { kz: "Дәлелдеу", ru: "Доказывать" },
+    { kz: "Қатыстыру", ru: "Привлекать" },
+  ]
+};
 
 function App() {
-  const [screen, setScreen] = useState<'home' | 'level' | 'step1' | 'step2' | 'step3'>('home');
-  const [level, setLevel] = useState<'easy' | 'medium' | 'hard' | null>(null);
+  const [screen, setScreen] = useState("home");
+  const [level, setLevel] = useState("easy");
   const [score, setScore] = useState(0);
-  const [stats, setStats] = useState({ correct: 0, wrong: 0 });
+  const [stats, setStats] = useState({ correct: 0, incorrect: 0 });
 
-  const goNext = () => {
-    if (screen === 'home') setScreen('level');
-    else if (screen === 'level') setScreen('step1');
-    else if (screen === 'step1') setScreen('step2');
-    else if (screen === 'step2') setScreen('step3');
+  useEffect(() => {
+    console.log("Level:", level);
+    console.log("Score:", score);
+    console.log("Stats:", stats);
+  }, [level, score, stats]);
+
+  const goToNext = () => {
+    if (screen === "step1") setScreen("step2");
+    else if (screen === "step2") setScreen("step3");
   };
 
-  const goBack = () => {
-    if (screen === 'step3') setScreen('step2');
-    else if (screen === 'step2') setScreen('step1');
-    else if (screen === 'step1') setScreen('level');
-    else if (screen === 'level') setScreen('home');
+  const goToPrev = () => {
+    if (screen === "step2") setScreen("step1");
+    else if (screen === "step3") setScreen("step2");
   };
 
-  const screens = {
-    home: (
-      <div className="container">
-        <img src={avatar} alt="KazBot Logo" className="logo" />
-        <h1>KazBot</h1>
-        <p className="description">Твой помощник в изучении казахского языка kz</p>
-        <div className="buttons">
-          <button onClick={() => setScreen('level')}>📚 Начать обучение</button>
-          <button onClick={() => alert('🧠 Повторение скоро!')}>💬 Повторение</button>
-          <button onClick={() => alert('🎮 Игровой режим в разработке')}>🎮 Игровой режим</button>
-        </div>
-        <footer>@kzKazakhbot</footer>
-      </div>
-    ),
+  const startTraining = () => setScreen("step1");
 
-    level: (
+  if (screen === "step1") {
+    return (
       <div className="container">
-        <h2>Выбери уровень сложности</h2>
-        <div className="buttons">
-          <button onClick={() => { setLevel('easy'); goNext(); }}>Лёгкий</button>
-          <button onClick={() => { setLevel('medium'); goNext(); }}>Средний</button>
-          <button onClick={() => { setLevel('hard'); goNext(); }}>Сложный</button>
-        </div>
-        <button onClick={goBack}>← Назад</button>
-      </div>
-    ),
-
-    step1: (
-      <div className="container">
-        <h2>📘 Этап 1: Соединение пар слов</h2>
+        <h2>📄 Этап 1: Соединение пар слов</h2>
         <p>Здесь будет интерфейс для соединения казахских и русских слов.</p>
-        <div className="buttons">
-          <button onClick={goNext}>→ Далее</button>
-          <button onClick={goBack}>← Назад</button>
+        <div className="nav-buttons">
+          <button onClick={goToNext}>→ Далее</button>
+          <button onClick={goToPrev}>← Назад</button>
         </div>
-        <footer>@kzKazakhbot</footer>
       </div>
-    ),
+    );
+  }
 
-    step2: (
+  if (screen === "step2") {
+    return (
       <div className="container">
         <h2>🧠 Этап 2: Выбор перевода</h2>
         <p>Будет слово, и пользователь выберет перевод.</p>
-        <div className="buttons">
-          <button onClick={goNext}>→ Далее</button>
-          <button onClick={goBack}>← Назад</button>
+        <div className="nav-buttons">
+          <button onClick={goToNext}>→ Далее</button>
+          <button onClick={goToPrev}>← Назад</button>
         </div>
-        <footer>@kzKazakhbot</footer>
       </div>
-    ),
+    );
+  }
 
-    step3: (
+  if (screen === "step3") {
+    return (
       <div className="container">
         <h2>✍️ Этап 3: Составление предложения</h2>
         <p>Пользователь должен собрать предложение из слов.</p>
-        <div className="buttons">
-          <button onClick={goBack}>← Назад</button>
+        <div className="nav-buttons">
+          <button onClick={goToPrev}>← Назад</button>
         </div>
-        <footer>@kzKazakhbot</footer>
       </div>
-    ),
-  };
+    );
+  }
 
-  return screens[screen];
+  return (
+    <div className="container">
+      <img src={avatar} alt="KazBot Logo" className="logo" />
+      <h1>KazBot</h1>
+      <p className="description">
+        Твой помощник в изучении казахского языка kz
+      </p>
+      <div className="buttons">
+        <button onClick={startTraining}>📘 Начать обучение</button>
+        <button>💬 Повторение</button>
+        <button>🎮 Игровой режим</button>
+      </div>
+      <footer>@kzKazakhbot</footer>
+    </div>
+  );
 }
 
 export default App;
+
 
   
 
