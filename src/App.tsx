@@ -1,101 +1,77 @@
-// App.tsx
-import './App.css';
-import avatar from './assets/Молодой человек в традиционном головном уборе.png';
+// KazBot WebApp (React + Vercel)
+// Начальный экран и логика переходов по этапам обучения
+
 import React, { useState } from 'react';
 
-export default function App() {
-  const [screen, setScreen] = useState<'home' | 'step1' | 'step2' | 'step3'>('home');
-  const [selectedWord, setSelectedWord] = useState<string | null>(null);
+const KazBot = () => {
+  const [stage, setStage] = useState('main');
 
-  const wordPairs = [
-    { kz: 'Сәлем', ru: 'Привет' },
-    { kz: 'Қалайсың', ru: 'Как дела' },
-    { kz: 'Иә', ru: 'Да' },
-    { kz: 'Жоқ', ru: 'Нет' },
-  ];
+  const renderMainScreen = () => (
+    <div className="flex flex-col items-center justify-center h-screen p-6 text-center">
+      <img src="/bot-avatar.png" alt="KazBot Logo" className="w-20 h-20 rounded-full mb-4" />
+      <h1 className="text-4xl font-bold mb-2">KazBot</h1>
+      <p className="text-gray-600 mb-6">Твой помощник в изучении казахского языка</p>
+      <div className="space-y-3">
+        <button
+          onClick={() => setStage('learn')}
+          className="bg-green-500 text-white px-6 py-3 rounded-2xl shadow hover:bg-green-600">
+          📚 Начать обучение
+        </button>
+        <button
+          className="bg-gray-200 text-gray-800 px-6 py-3 rounded-2xl shadow">
+          💬 Повторение
+        </button>
+        <button
+          className="bg-purple-500 text-white px-6 py-3 rounded-2xl shadow hover:bg-purple-600">
+          🎮 Игровой режим
+        </button>
+      </div>
+    </div>
+  );
 
-  const handleWordClick = (word: string) => {
-    if (!selectedWord) {
-      setSelectedWord(word);
-    } else {
-      console.log(`Выбрана пара: ${selectedWord} = ${word}`);
-      setSelectedWord(null);
+  const renderLearningStage = () => (
+    <div className="p-6">
+      <h2 className="text-2xl font-semibold mb-4">Этапы обучения</h2>
+      <div className="space-y-4">
+        <button
+          onClick={() => setStage('match')}
+          className="w-full bg-blue-100 text-blue-800 p-4 rounded-xl shadow">
+          1. 🔗 Соединение слов
+        </button>
+        <button
+          onClick={() => setStage('translate')}
+          className="w-full bg-yellow-100 text-yellow-800 p-4 rounded-xl shadow">
+          2. 📝 Перевод слов
+        </button>
+        <button
+          onClick={() => setStage('sentence')}
+          className="w-full bg-pink-100 text-pink-800 p-4 rounded-xl shadow">
+          3. 🧩 Составление предложений
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderContent = () => {
+    switch (stage) {
+      case 'main':
+        return renderMainScreen();
+      case 'learn':
+        return renderLearningStage();
+      case 'match':
+        return <div className="p-6">Здесь будет интерфейс "Соединение слов"</div>;
+      case 'translate':
+        return <div className="p-6">Здесь будет интерфейс "Перевод слов"</div>;
+      case 'sentence':
+        return <div className="p-6">Здесь будет интерфейс "Составление предложений"</div>;
+      default:
+        return renderMainScreen();
     }
   };
 
-  const goBack = () => {
-    if (screen === 'step1') setScreen('home');
-    else if (screen === 'step2') setScreen('step1');
-    else if (screen === 'step3') setScreen('step2');
-  };
+  return <div className="font-sans min-h-screen bg-gray-50">{renderContent()}</div>;
+};
 
-  const goNext = () => {
-    if (screen === 'home') setScreen('step1');
-    else if (screen === 'step1') setScreen('step2');
-    else if (screen === 'step2') setScreen('step3');
-  };
-
-  return (
-    <div className="container">
-      {screen === 'home' && (
-        <>
-          <img src={avatar} alt="KazBot Logo" className="logo" />
-          <h1>KazBot</h1>
-          <p className="description">Твой помощник в изучении казахского языка kz</p>
-          <div className="buttons">
-            <button onClick={() => setScreen('step1')}>📚 Начать обучение</button>
-            <button>💬 Повторение</button>
-            <button>🎮 Игровой режим</button>
-          </div>
-          <footer>@kzKazakhbot</footer>
-        </>
-      )}
-
-      {screen === 'step1' && (
-        <>
-          <h2>🔵 Этап 1: Соединение пар слов</h2>
-          <p>Соедини слова на казахском и русском</p>
-          <div className="pairing">
-            <div>
-              {wordPairs.map(({ kz }, idx) => (
-                <button key={`kz-${idx}`} onClick={() => handleWordClick(kz)}>{kz}</button>
-              ))}
-            </div>
-            <div>
-              {wordPairs.map(({ ru }, idx) => (
-                <button key={`ru-${idx}`} onClick={() => handleWordClick(ru)}>{ru}</button>
-              ))}
-            </div>
-          </div>
-          <div className="nav">
-            <button onClick={goNext}>→ Далее</button>
-            <button onClick={goBack}>← Назад</button>
-          </div>
-        </>
-      )}
-
-      {screen === 'step2' && (
-        <>
-          <h2>🧠 Этап 2: Выбор перевода</h2>
-          <p>Будет слово, и пользователь выберет перевод.</p>
-          <div className="nav">
-            <button onClick={goNext}>→ Далее</button>
-            <button onClick={goBack}>← Назад</button>
-          </div>
-        </>
-      )}
-
-      {screen === 'step3' && (
-        <>
-          <h2>✍️ Этап 3: Составление предложения</h2>
-          <p>Пользователь должен собрать предложение из слов.</p>
-          <div className="nav">
-            <button onClick={goBack}>← Назад</button>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
+export default KazBot;
 
 
