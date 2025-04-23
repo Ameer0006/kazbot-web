@@ -1,59 +1,90 @@
-// App.tsx
-import './App.css';
-import avatar from './assets/Молодой человек в головном уборе.png';
-import { useState } from 'react';
+// App.tsx (расширенная версия с уровнями, статистикой и аудио)
+import { useState } from "react";
+import "./App.css";
+import avatar from "./assets/avatar.png";
 
-function App() {
-  const [screen, setScreen] = useState<'home' | 'game' | 'cards' | 'sentence'>('home');
+const wordPairs = [
+  { kaz: "Сәлем", rus: "Привет" },
+  { kaz: "Қалайсың", rus: "Как дела" },
+  { kaz: "Иә", rus: "Да" },
+  { kaz: "Жоқ", rus: "Нет" },
+  { kaz: "Бардым", rus: "Пошёл" },
+  { kaz: "Келеді", rus: "Придёт" },
+  { kaz: "Жазып жатыр", rus: "Пишет" }
+];
+
+export default function App() {
+  const [screen, setScreen] = useState("home");
+  const [level, setLevel] = useState("beginner");
+  const [score, setScore] = useState(0);
+
+  const handleLevelChange = (e: any) => {
+    setLevel(e.target.value);
+  };
+
+  const playAudio = (text: string) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "kk-KZ";
+    window.speechSynthesis.speak(utterance);
+  };
 
   return (
     <div className="container">
-      {screen === 'home' && (
+      {screen === "home" && (
         <>
           <img src={avatar} alt="KazBot Logo" className="logo" />
           <h1>KazBot</h1>
-          <p className="description">Твой помощник в изучении казахского языка kz</p>
+          <p className="description">
+            Твой помощник в изучении казахского языка kz
+          </p>
+
+          <select onChange={handleLevelChange} value={level} className="level-select">
+            <option value="beginner">Начальный</option>
+            <option value="intermediate">Средний</option>
+            <option value="advanced">Продвинутый</option>
+          </select>
+
           <div className="buttons">
-            <button onClick={() => setScreen('game')}>🔠 Соединение слов</button>
-            <button onClick={() => setScreen('cards')}>📘 Карточки</button>
-            <button onClick={() => setScreen('sentence')}>✍️ Составление предложений</button>
+            <button onClick={() => setScreen("learn")}>📚 Начать обучение</button>
+            <button onClick={() => setScreen("stats")}>📊 Статистика</button>
+            <button onClick={() => setScreen("game")}>🎮 Игровой режим</button>
           </div>
           <footer>@kzKazakhbot</footer>
         </>
       )}
 
-      {screen === 'game' && (
+      {screen === "learn" && (
         <div>
-          <h2>🔗 Соедини пары слов</h2>
-          {/* Тут будет логика соединения */}
-          <button onClick={() => setScreen('home')}>Назад</button>
+          <h2>Соедини пары слов ({level})</h2>
+          <div className="word-columns">
+            <div className="column">
+              {wordPairs.map((pair, index) => (
+                <button key={index} onClick={() => playAudio(pair.kaz)}>
+                  {pair.kaz} 🔊
+                </button>
+              ))}
+            </div>
+            <div className="column">
+              {wordPairs.map((pair, index) => (
+                <button key={index + 10}>{pair.rus}</button>
+              ))}
+            </div>
+          </div>
+          <button onClick={() => setScreen("home")} className="back">⬅ Назад</button>
         </div>
       )}
 
-      {screen === 'cards' && (
+      {screen === "stats" && (
         <div>
-          <h2>📘 Выбери правильный перевод</h2>
-          {/* Тут будут карточки */}
-          <button onClick={() => setScreen('home')}>Назад</button>
-        </div>
-      )}
-
-      {screen === 'sentence' && (
-        <div>
-          <h2>✍️ Собери предложение</h2>
-          {/* Тут будет логика сборки предложения */}
-          <button onClick={() => setScreen('home')}>Назад</button>
+          <h2>📊 Ваша статистика</h2>
+          <p>Текущий уровень: {level}</p>
+          <p>Набрано очков: {score}</p>
+          <button onClick={() => setScreen("home")} className="back">⬅ Назад</button>
         </div>
       )}
     </div>
   );
 }
-
-export default App;
-
-
-       
-
 
 
 
