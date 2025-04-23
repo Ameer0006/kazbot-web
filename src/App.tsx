@@ -1,13 +1,20 @@
-// src/App.tsx
-import { useState } from 'react';
 import './App.css';
 import avatar from './assets/avatar.png';
+import { useState } from 'react';
 
-export default function App() {
-  const [screen, setScreen] = useState<'home' | 'level' | 'learn' | 'repeat' | 'game' | 'stats'>('home');
-  const [level, setLevel] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
-  const [score, setScore] = useState<number>(0);
-  const [errors, setErrors] = useState<string[]>([]);
+function App() {
+  const [screen, setScreen] = useState<'home' | 'level' | 'learn' | 'repeat' | 'game'>('home');
+  const [level, setLevel] = useState<'easy' | 'medium' | 'hard' | null>(null);
+  const [score, setScore] = useState(0);
+  const [errors, setErrors] = useState(0);
+
+  const handleStartClick = () => setScreen('level');
+  const handleLevelSelect = (chosenLevel: 'easy' | 'medium' | 'hard') => {
+    setLevel(chosenLevel);
+    setScreen('learn');
+  };
+
+  const handleBackToHome = () => setScreen('home');
 
   return (
     <div className="container">
@@ -15,43 +22,53 @@ export default function App() {
         <>
           <img src={avatar} alt="KazBot Logo" className="logo" />
           <h1>KazBot</h1>
-          <p className="description">Твой помощник в изучении казахского языка</p>
+          <p className="description">Твой помощник в изучении казахского языка kz</p>
           <div className="buttons">
-            <button onClick={() => setScreen('level')}>📖 Начать обучение</button>
-            <button onClick={() => setScreen('repeat')}>🔁 Повторение</button>
+            <button onClick={handleStartClick}>📚 Начать обучение</button>
+            <button onClick={() => setScreen('repeat')}>💬 Повторение</button>
             <button onClick={() => setScreen('game')}>🎮 Игровой режим</button>
           </div>
-          <footer className="footer">@kzKazakhbot</footer>
+          <footer>@kzKazakhbot</footer>
         </>
       )}
 
       {screen === 'level' && (
-        <>
-          <h2>Выберите уровень</h2>
-          <div className="buttons">
-            <button onClick={() => { setLevel('beginner'); setScreen('learn'); }}>🔰 Начальный</button>
-            <button onClick={() => { setLevel('intermediate'); setScreen('learn'); }}>⚙️ Средний</button>
-            <button onClick={() => { setLevel('advanced'); setScreen('learn'); }}>🔥 Продвинутый</button>
-          </div>
-          <button className="back" onClick={() => setScreen('home')}>⬅ Назад</button>
-        </>
-      )}
-
-      {screen === 'stats' && (
-        <div>
-          <h2>📊 Ваша статистика</h2>
-          <p>Уровень: {level}</p>
-          <p>Очки: {score}</p>
-          <p>Ошибки: {errors.length}</p>
-          <button onClick={() => setScreen('home')} className="back">⬅ Назад</button>
+        <div className="level-select">
+          <h2>Выбери уровень сложности</h2>
+          <button onClick={() => handleLevelSelect('easy')}>Начальный</button>
+          <button onClick={() => handleLevelSelect('medium')}>Средний</button>
+          <button onClick={() => handleLevelSelect('hard')}>Продвинутый</button>
+          <button onClick={handleBackToHome}>⬅ Назад</button>
         </div>
       )}
 
-      {/* Здесь позже подключим Step1, Step2, Step3, Repeat, Game */}
+      {/* Заготовки для следующих экранов */}
+      {screen === 'learn' && (
+        <div>
+          <h2>Режим обучения ({level})</h2>
+          <p>Очки: {score} | Ошибки: {errors}</p>
+          <button onClick={handleBackToHome}>⬅ Назад</button>
+        </div>
+      )}
+
+      {screen === 'repeat' && (
+        <div>
+          <h2>Повторение ошибок</h2>
+          <button onClick={handleBackToHome}>⬅ Назад</button>
+        </div>
+      )}
+
+      {screen === 'game' && (
+        <div>
+          <h2>Игровой режим</h2>
+          <button onClick={handleBackToHome}>⬅ Назад</button>
+        </div>
+      )}
     </div>
   );
 }
 
+export default App;
 
 
 
