@@ -1,73 +1,80 @@
-import { useState } from 'react';
-import './App.css';
-
-const wordPairs = [
-  { kz: 'Сәлем', ru: 'Привет' },
-  { kz: 'Қалайсың', ru: 'Как дела' },
-  { kz: 'Иә', ru: 'Да' },
-  { kz: 'Жоқ', ru: 'Нет' },
-];
-
-function App() {
-  const [selectedKaz, setSelectedKaz] = useState<string | null>(null);
-  const [matched, setMatched] = useState<{ [kz: string]: string }>({});
-  const [error, setError] = useState(false);
-
-  const handleKazClick = (word: string) => {
-    setSelectedKaz(word);
-  };
-
-  const handleRuClick = (word: string) => {
-    if (!selectedKaz) return;
-    const pair = wordPairs.find((p) => p.kz === selectedKaz);
-    if (pair?.ru === word) {
-      setMatched((prev) => ({ ...prev, [selectedKaz]: word }));
-      setError(false);
-    } else {
-      setMatched({});
-      setError(true);
-    }
-    setSelectedKaz(null);
-  };
-
-  const allCorrect = Object.keys(matched).length === wordPairs.length;
-
-  return (
-    <div className="container">
-      <h2>🔵 Этап 1: Соединение пар слов</h2>
-      <p>Соедини слова на казахском и русском</p>
-
-      <div className="columns">
-        <div className="column">
-          {wordPairs.map((pair) => (
-            <button
-              key={pair.kz}
-              className={`word-button ${selectedKaz === pair.kz ? 'selected' : ''}`}
-              onClick={() => handleKazClick(pair.kz)}>
-              {pair.kz}
-            </button>
-          ))}
+{screen === "cards" && (
+        <div>
+          <h2>📘 Выбери перевод слова</h2>
+          <p><strong>{quizWord}</strong></p>
+          <div className="buttons">
+            {options.map((option) => (
+              <button
+                key={option}
+                onClick={() => handleAnswer(option)}
+                style={{
+                  backgroundColor: showResult
+                    ? option === "Привет"
+                      ? "lightgreen"
+                      : isCorrect
+                      ? ""
+                      : "salmon"
+                    : "",
+                }}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          {showResult && (
+            <div style={{ marginTop: "10px" }}>
+              {isCorrect ? (
+                <>
+                  <p style={{ color: "green" }}>✅ Верно!</p>
+                  <button onClick={() => { setScreen("sentence"); setShowResult(false); }}>➡️ Далее</button>
+                </>
+              ) : (
+                <p style={{ color: "red" }}>❌ Неверно</p>
+              )}
+            </div>
+          )}
         </div>
+      )}
 
-        <div className="column">
-          {wordPairs.map((pair) => (
-            <button
-              key={pair.ru}
-              className={`word-button ${matched[pair.kz] === pair.ru ? 'matched' : ''}`}
-              onClick={() => handleRuClick(pair.ru)}>
-              {pair.ru}
-            </button>
-          ))}
+      {screen === "sentence" && (
+        <div>
+          <h2>📌 Составь предложение</h2>
+          <p><strong>{sentenceKaz}</strong></p>
+          <div className="buttons">
+            {sentenceWords.map((word) => (
+              <button
+                key={word}
+                onClick={() => handleSentenceSelect(word)}
+                disabled={sentenceAnswer.includes(word)}
+              >
+                {word}
+              </button>
+            ))}
+          </div>
+          <div style={{ marginTop: "10px" }}>
+            <p><strong>Ваш ответ:</strong> {sentenceAnswer.join(" ")}</p>
+          </div>
+          {sentenceAnswer.length === correctSentence.length && (
+            <div>
+              {sentenceAnswer.join(" ") === correctSentence.join(" ") ? (
+                <>
+                  <p style={{ color: "green" }}>✅ Молодец! Всё правильно.</p>
+                  <button onClick={() => setScreen("home")}>🏠 В меню</button>
+                </>
+              ) : (
+                <>
+                  <p style={{ color: "red" }}>❌ Ошибка! Попробуй снова.</p>
+                  <button onClick={resetSentence}>🔁 Повторить</button>
+                </>
+              )}
+            </div>
+          )}
         </div>
-      </div>
-
-      {error && <p className="error">❌ Ошибка! Начни заново.</p>}
-      {allCorrect && <button className="next-button">➡ Далее</button>}
+      )}
     </div>
   );
 }
 
 export default App;
-
 
 
