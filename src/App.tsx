@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import avatar from "./assets/avatar.png";
+import avatar from "./assets/Молодой человек в головном уборе.png";
 
 function App() {
   const [screen, setScreen] = useState<"home" | "pairs" | "cards" | "sentence">("home");
