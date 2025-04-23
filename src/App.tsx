@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import avatar from "./assets/Молодой человек в традиционном головном уборе.png";
 
