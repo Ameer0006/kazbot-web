@@ -1,12 +1,13 @@
+import { useState } from "react";
 import "./App.css";
 import avatar from "./assets/Молодой человек в традиционном головном уборе.png";
-import { useState } from "react";
 
 function App() {
-  const [screen, setScreen] = useState("home");
-  const [selectedPair, setSelectedPair] = useState<{ kaz: string; rus: string } | null>(null);
-  const [quizResult, setQuizResult] = useState<null | boolean>(null);
-  const [sentenceResult, setSentenceResult] = useState<null | boolean>(null);
+  const [screen, setScreen] = useState<"home" | "match" | "cards" | "sentence">("home");
+  const [selectedPair, setSelectedPair] = useState<string[]>([]);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [sentenceAnswer, setSentenceAnswer] = useState<string[]>([]);
 
   const wordPairs = [
     { kaz: "Сәлем", rus: "Привет" },
@@ -15,38 +16,27 @@ function App() {
     { kaz: "Жоқ", rus: "Нет" },
   ];
 
+  const quizWord = "Сәлем";
   const options = ["Пока", "Привет", "Здравствуйте"];
-  const correct = "Привет";
 
-  const sentenceKaz = ["Мен", "мектепке", "барамын"];
-  const sentenceRus = ["Я", "иду", "в", "школу"];
-  const correctRus = ["Я", "иду", "в", "школу"];
+  const sentenceRu = "Я иду в школу";
+  const correctKaz = ["Мен", "мектепке", "барамын"];
+  const shuffledKaz = ["барамын", "Мен", "мектепке"];
 
-  const handleLearnClick = () => {
-    setScreen("match");
+  const handleAnswer = (option: string) => {
+    setSelectedAnswer(option);
+    setIsCorrect(option === "Привет");
   };
 
-  const handleReviewClick = () => {
-    alert("🧠 Повторение слов — в разработке!");
+  const handleSentenceClick = (word: string) => {
+    setSentenceAnswer((prev) => [...prev, word]);
   };
 
-  const handleGameClick = () => {
-    alert("🎮 Игра загружается...");
-  };
-
-  const handlePairSelect = (kaz: string, rus: string) => {
-    const pair = wordPairs.find((p) => p.kaz === kaz);
-    if (pair && pair.rus === rus) {
-      setSelectedPair(pair);
-    }
-  };
-
-  const handleQuizAnswer = (answer: string) => {
-    setQuizResult(answer === correct);
-  };
-
-  const handleSentenceCheck = (userSentence: string[]) => {
-    setSentenceResult(JSON.stringify(userSentence) === JSON.stringify(correctRus));
+  const resetAll = () => {
+    setSelectedPair([]);
+    setSelectedAnswer(null);
+    setIsCorrect(null);
+    setSentenceAnswer([]);
   };
 
   return (
@@ -55,59 +45,87 @@ function App() {
         <>
           <img src={avatar} alt="KazBot Logo" className="logo" />
           <h1>KazBot</h1>
-          <p className="description">
-            Твой помощник в изучении казахского языка kz
-          </p>
-
+          <p className="description">Твой помощник в изучении казахского языка kz</p>
           <div className="buttons">
-            <button onClick={handleLearnClick}>📘 Начать обучение</button>
-            <button onClick={handleReviewClick}>🧠 Повторение</button>
-            <button onClick={handleGameClick}>🎮 Игровой режим</button>
+            <button onClick={() => setScreen("match")}>📚 Начать обучение</button>
+            <button onClick={() => alert("💬 Повторение слов — скоро!")}>💬 Повторение</button>
+            <button onClick={() => alert("🎮 Игровой режим — в разработке")}>🎮 Игровой режим</button>
           </div>
-
           <footer>@kzKazakhbot</footer>
         </>
       )}
 
       {screen === "match" && (
-        <div className="exercise">
-          <h2>Соедини слова</h2>
+        <>
+          <h2>🔗 Соедини пары слов</h2>
           <div className="columns">
-            <ul>
+            <div>
               {wordPairs.map((pair) => (
-                <li key={pair.kaz}>{pair.kaz}</li>
+                <button key={pair.kaz} onClick={() => setSelectedPair([pair.kaz, selectedPair[1]])}>
+                  {pair.kaz}
+                </button>
               ))}
-            </ul>
-            <ul>
+            </div>
+            <div>
               {wordPairs.map((pair) => (
-                <li key={pair.rus} onClick={() => handlePairSelect(pair.kaz, pair.rus)}>{pair.rus}</li>
+                <button key={pair.rus} onClick={() => setSelectedPair([selectedPair[0], pair.rus])}>
+                  {pair.rus}
+                </button>
               ))}
-            </ul>
+            </div>
           </div>
-          {selectedPair && <p>✅ Верно: {selectedPair.kaz} — {selectedPair.rus}</p>}
-
-          <h2>Выбери перевод слова: "Сәлем"</h2>
-          {options.map((opt) => (
-            <button
-              key={opt}
-              onClick={() => handleQuizAnswer(opt)}
-              style={{ backgroundColor: quizResult === null ? '' : opt === correct ? 'lightgreen' : 'lightcoral' }}
-            >
-              {opt}
-            </button>
-          ))}
-
-          <h2>Собери предложение: "Мен мектепке барамын"</h2>
-          {sentenceRus.map((word, idx) => (
-            <span key={idx}>{word} </span>
-          ))}
-          <button onClick={() => handleSentenceCheck(sentenceRus)}>Проверить</button>
-          {sentenceResult !== null && (
-            <p style={{ color: sentenceResult ? "green" : "red" }}>
-              {sentenceResult ? "✅ Верно!" : "❌ Неверно"}
+          {selectedPair[0] && selectedPair[1] && (
+            <p>
+              Вы выбрали: <strong>{selectedPair[0]}</strong> = <strong>{selectedPair[1]}</strong>
             </p>
           )}
-        </div>
+          <button onClick={() => { resetAll(); setScreen("cards"); }}>➡️ Далее</button>
+        </>
+      )}
+
+      {screen === "cards" && (
+        <>
+          <h2>🧠 Выбери правильный перевод</h2>
+          <p><strong>{quizWord}</strong> = ?</p>
+          <div className="buttons">
+            {options.map((option) => (
+              <button
+                key={option}
+                style={{
+                  backgroundColor:
+                    selectedAnswer === option ? (isCorrect ? "#b3f1b3" : "#f9b3b3") : "white",
+                }}
+                onClick={() => handleAnswer(option)}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          <button onClick={() => { resetAll(); setScreen("sentence"); }}>➡️ Далее</button>
+        </>
+      )}
+
+      {screen === "sentence" && (
+        <>
+          <h2>🧩 Собери перевод предложения</h2>
+          <p>Предложение на русском: <strong>{sentenceRu}</strong></p>
+          <div className="buttons">
+            {shuffledKaz.map((word) => (
+              <button
+                key={word}
+                disabled={sentenceAnswer.includes(word)}
+                onClick={() => handleSentenceClick(word)}
+              >
+                {word}
+              </button>
+            ))}
+          </div>
+          <p>Ты выбрал: {sentenceAnswer.join(" ")}</p>
+          {sentenceAnswer.join(" ") === correctKaz.join(" ") && (
+            <p style={{ color: "green" }}>✅ Верно!</p>
+          )}
+          <button onClick={() => { setScreen("home"); resetAll(); }}>🏠 На главную</button>
+        </>
       )}
     </div>
   );
