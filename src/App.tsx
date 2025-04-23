@@ -1,20 +1,19 @@
-// App.tsx
 import { useState } from "react";
 import "./App.css";
+import avatar from "./assets/avatar.png";
 
 function App() {
-  const [screen, setScreen] = useState("home");
-  const [selectedPair, setSelectedPair] = useState<{ kz: string; ru: string } | null>(null);
+  const [screen, setScreen] = useState<"home" | "step1" | "step2" | "step3">("home");
+  const [selectedWord, setSelectedWord] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [selectedSentence, setSelectedSentence] = useState<string[]>([]);
+  const [selectedSentence, setSentenceAnswer] = useState<string[]>([]);
 
   const wordPairs = [
-    { kz: "Сәлем", ru: "Привет" },
-    { kz: "Қалың қалай", ru: "Как дела" },
-    { kz: "Иә", ru: "Да" },
-    { kz: "Жоқ", ru: "Нет" },
+    { kaz: "Сәлем", rus: "Привет" },
+    { kaz: "Қалың қалай", rus: "Как дела" },
+    { kaz: "Иә", rus: "Да" },
+    { kaz: "Жоқ", rus: "Нет" },
   ];
 
   const quizWord = "Сәлем";
@@ -26,42 +25,50 @@ function App() {
 
   const handleAnswer = (option: string) => {
     const correct = option === "Привет";
-    setSelectedOption(option);
     setIsCorrect(correct);
     setShowResult(true);
   };
 
   const handleSentenceSelect = (word: string) => {
-    setSelectedSentence([...selectedSentence, word]);
+    if (selectedSentence.includes(word)) return;
+    setSentenceAnswer([...selectedSentence, word]);
   };
 
   const reset = () => {
-    setScreen("home");
-    setSelectedPair(null);
-    setSelectedOption(null);
     setShowResult(false);
-    setIsCorrect(false);
-    setSelectedSentence([]);
+    setSentenceAnswer([]);
   };
 
   return (
-    <div className="App">
+    <div className="container">
       {screen === "home" && (
-        <div>
+        <>
+          <img src={avatar} alt="KazBot Logo" className="logo" />
           <h1>KazBot</h1>
-          <p>Твой помощник в изучении казахского языка</p>
-          <button onClick={() => setScreen("match")}>Начать обучение</button>
-        </div>
+          <p className="description">
+            Твой помощник в изучении казахского языка kz
+          </p>
+          <div className="buttons">
+            <button onClick={() => setScreen("step1")}>📚 Начать обучение</button>
+            <button>🧠 Повторение</button>
+            <button>🎮 Игровой режим</button>
+          </div>
+          <footer>@kzKazakhbot</footer>
+        </>
       )}
 
-      {screen === "match" && (
-        <div>
-          <h2>Соедини пары слов</h2>
-          <div className="columns">
+      {screen === "step1" && (
+        <>
+          <h2>🔗 Соедините пары слов</h2>
+          <div className="match-columns">
             <div>
               {wordPairs.map((pair, i) => (
-                <div key={i} onClick={() => setSelectedPair(pair)}>
-                  {pair.kz}
+                <div
+                  key={i}
+                  className={`word ${selectedWord === pair.kaz ? "selected" : ""}`}
+                  onClick={() => setSelectedWord(pair.kaz)}
+                >
+                  {pair.kaz}
                 </div>
               ))}
             </div>
@@ -69,69 +76,68 @@ function App() {
               {wordPairs.map((pair, i) => (
                 <div
                   key={i}
+                  className="word"
                   onClick={() => {
-                    if (selectedPair && pair.ru === selectedPair.ru) {
-                      alert("Правильно!");
+                    if (selectedWord && selectedWord === pair.kaz) {
+                      alert("✅ Правильно!");
                     } else {
-                      alert("Неправильно");
+                      alert("❌ Неправильно");
                     }
+                    setSelectedWord(null);
                   }}
                 >
-                  {pair.ru}
+                  {pair.rus}
                 </div>
               ))}
             </div>
           </div>
-          <button onClick={() => setScreen("quiz")}>Далее</button>
-        </div>
+          <button onClick={() => setScreen("step2")}>➡️ Далее</button>
+        </>
       )}
 
-      {screen === "quiz" && (
-        <div>
-          <h2>Выбери перевод слова: "{quizWord}"</h2>
-          {options.map((option, i) => (
-            <button
-              key={i}
-              style={{
-                backgroundColor: showResult
-                  ? option === selectedOption
-                    ? isCorrect
-                      ? "lightgreen"
-                      : "salmon"
-                    : ""
-                  : "",
-              }}
-              onClick={() => handleAnswer(option)}
-            >
-              {option}
-            </button>
-          ))}
-          {showResult && <button onClick={() => setScreen("sentence")}>Далее</button>}
-        </div>
+      {screen === "step2" && (
+        <>
+          <h2>🃏 Выберите правильный перевод</h2>
+          <p>Что значит: <b>{quizWord}</b>?</p>
+          <div className="options">
+            {options.map((option, i) => (
+              <button
+                key={i}
+                onClick={() => handleAnswer(option)}
+                className={showResult ? (option === "Привет" ? "correct" : "wrong") : ""}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          {showResult && (
+            <p>{isCorrect ? "✅ Верно!" : "❌ Неверно!"}</p>
+          )}
+          <button onClick={() => setScreen("step3")}>➡️ Далее</button>
+        </>
       )}
 
-      {screen === "sentence" && (
-        <div>
-          <h2>Собери перевод предложения: "{sentence}"</h2>
-          <div>
+      {screen === "step3" && (
+        <>
+          <h2>📚 Соберите перевод предложения</h2>
+          <p>Предложение: <b>{sentence}</b></p>
+          <div className="sentence">
             {sentenceWords.map((word, i) => (
               <button key={i} onClick={() => handleSentenceSelect(word)}>
                 {word}
               </button>
             ))}
           </div>
-          <p>{selectedSentence.join(" ")}</p>
+          <p>Ваш ответ: <b>{selectedSentence.join(" ")}</b></p>
           {selectedSentence.length === correctSentence.length && (
-            <div>
-              {JSON.stringify(selectedSentence) === JSON.stringify(correctSentence) ? (
-                <p style={{ color: "green" }}>Правильно!</p>
-              ) : (
-                <p style={{ color: "red" }}>Неправильно</p>
-              )}
-              <button onClick={reset}>В начало</button>
-            </div>
+            <p>
+              {JSON.stringify(selectedSentence) === JSON.stringify(correctSentence)
+                ? "✅ Верно!"
+                : "❌ Попробуйте снова"}
+            </p>
           )}
-        </div>
+          <button onClick={reset}>🔄 Сброс</button>
+        </>
       )}
     </div>
   );
