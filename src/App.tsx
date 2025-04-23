@@ -3,11 +3,11 @@ import "./App.css";
 import avatar from "./assets/avatar.png";
 
 function App() {
-  const [screen, setScreen] = useState<"home" | "step1" | "step2" | "step3">("home");
-  const [selectedWord, setSelectedWord] = useState<string | null>(null);
+  const [screen, setScreen] = useState("home");
+  const [selectedWord, setSelectedWord] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [selectedSentence, setSentenceAnswer] = useState<string[]>([]);
+  const [selectedSentence, setSentenceAnswer] = useState([]);
 
   const wordPairs = [
     { kaz: "Сәлем", rus: "Привет" },
@@ -23,13 +23,13 @@ function App() {
   const sentenceWords = ["Я", "в", "школу", "иду"];
   const correctSentence = ["Я", "иду", "в", "школу"];
 
-  const handleAnswer = (option: string) => {
+  const handleAnswer = (option) => {
     const correct = option === "Привет";
     setIsCorrect(correct);
     setShowResult(true);
   };
 
-  const handleSentenceSelect = (word: string) => {
+  const handleSentenceSelect = (word) => {
     if (selectedSentence.includes(word)) return;
     setSentenceAnswer([...selectedSentence, word]);
   };
@@ -144,6 +144,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
