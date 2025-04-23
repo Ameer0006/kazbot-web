@@ -1,6 +1,6 @@
 // App.tsx
 import './App.css';
-import avatar from './assets/avatar.png';
+import avatar from './assets/Молодой человек в головном уборе.png';
 import { useState } from 'react';
 
 function App() {
