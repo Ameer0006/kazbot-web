@@ -1,30 +1,31 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f8f8;
   margin: 0;
-  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fafafa;
+  color: #1a1a1a;
 }
 
 .container {
   text-align: center;
   padding: 30px 20px;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 .logo {
   width: 90px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-  color: #333;
+  font-size: 32px;
+  margin-bottom: 5px;
 }
 
 .description {
   font-size: 16px;
-  margin-bottom: 30px;
-  color: #555;
+  color: #666;
+  margin-bottom: 25px;
 }
 
 .buttons {
@@ -32,35 +33,28 @@ h1 {
   justify-content: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 button {
-  padding: 10px 18px;
+  padding: 10px 20px;
+  border-radius: 12px;
   border: none;
-  border-radius: 10px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  transition: 0.2s ease;
   font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: 0.2s ease;
+  background-color: #fff;
 }
 
 button:hover {
   background-color: #f0f0f0;
 }
 
-.columns {
-  display: flex;
-  justify-content: center;
-  gap: 60px;
-  margin-bottom: 20px;
-}
-
-.columns > div {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+button:disabled {
+  background-color: #eee;
+  color: #999;
+  cursor: not-allowed;
 }
 
 footer {
@@ -68,6 +62,3 @@ footer {
   font-size: 14px;
   color: #888;
 }
-
-
-
