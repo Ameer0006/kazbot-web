@@ -1,7 +1,6 @@
-Amir, [23.04.2025 11:19]
 import { useState } from "react";
 import "./App.css";
-import avatar from "./assets/Молодой человек в головном уборе.png";
+import avatar from "./assets/avatar.png";
 
 function App() {
   const [screen, setScreen] = useState<"home" | "pairs" | "cards" | "sentence">("home");
@@ -47,9 +46,9 @@ function App() {
     if (selectedKaz && selectedRus) {
       const match = wordPairs.find(p => p.kaz === selectedKaz && p.rus === selectedRus);
       if (match) {
-        setPairResult(✅ ${selectedKaz} = ${selectedRus});
+        setPairResult(`✅ ${selectedKaz} = ${selectedRus}`);
       } else {
-        setPairResult(❌ Неправильно. Попробуй снова);
+        setPairResult(`❌ Неправильно. Попробуй снова`);
       }
       setSelectedKaz(null);
       setSelectedRus(null);
@@ -102,8 +101,7 @@ function App() {
         </div>
       )}
 
-Amir, [23.04.2025 11:19]
-{screen === "cards" && (
+      {screen === "cards" && (
         <div>
           <h2>📘 Выбери перевод слова</h2>
           <p><strong>{quizWord}</strong></p>
@@ -181,5 +179,6 @@ Amir, [23.04.2025 11:19]
 }
 
 export default App;
+
 
 
